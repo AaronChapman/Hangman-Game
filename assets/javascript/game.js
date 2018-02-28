@@ -147,8 +147,10 @@ document.onkeyup = function(event) {
                         /* push the letter to the incorrect_guesses array,
                             decrement guesses_left and update the display */
                         incorrect_guesses.push(letter);
+                        
+                        $(".incorrect_letters_guessed").append(letter + " ");
 
-                        /* if the user already guessed that letter */
+                    /* if the user already guessed that letter */
                     } else
                         $(".status").text("you've already guessed that letter");
                 }
