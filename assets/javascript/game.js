@@ -142,9 +142,6 @@ document.onkeyup = function(event) {
                         $(".status").text("you've already guessed that letter");
                 /* if the current_word does not contain the letter that was pressed */
                 } else {
-                    /* decrement guesses_left */
-                    decrement();
-                    
                     /* if the user has not already guessed the letter */
                     if (!incorrect_guesses.includes(letter)) {
                         /* push the letter to the incorrect_guesses array,
@@ -152,7 +149,9 @@ document.onkeyup = function(event) {
                         incorrect_guesses.push(letter);
                         
                         $(".incorrect_letters_guessed").append(letter + " ");
-
+                        
+                        /* decrement guesses_left */
+                        decrement();
                     /* if the user already guessed that letter */
                     } else
                         $(".status").text("you've already guessed that letter");
