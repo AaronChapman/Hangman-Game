@@ -24,7 +24,9 @@ function new_game() {
     $(".guesses_left").text("guesses left: 0");
     $(".correct_letters_guessed").text("correct guesses: ");
     $(".incorrect_letters_guessed").text("incorrect guesses: ");
-    $('*').css('text-shadow', '1px 1px #545454');
+    
+    if (wins == 0 && losses == 0)
+        $('*').css('text-shadow', '1px 1px #545454');
 
     /* choose a new word & start background color animation loop */
     new_word();
