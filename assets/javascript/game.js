@@ -1,6 +1,6 @@
 /* declaring & initializing arrays for the word bank, correct & incorrect guesses,
     letters guessed, and the characters in the currently selected word */
-var word_bank = ["coding", "bootcamp", "georgia", "tech", "atlanta", "javascript", "html", "css", "software", "development"], correct_guesses = [], incorrect_guesses = [], letters_guessed = [], current_word_characters = [];
+var word_bank = ["coding", "hangman", "bootcamp", "programming", "engineer", "georgia", "technology", "institute", "atlanta", "javascript", "html", "css", "software", "development", "professional", "education"], correct_guesses = [], incorrect_guesses = [], letters_guessed = [], current_word_characters = [];
 
 /* hexidecimal characters */
 var hex_characters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
@@ -8,8 +8,8 @@ var hex_characters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B"
 /* variables to store the current_word, its length, the number of guesses
     the player has left, and a game_over determiner*/
 var current_word = "";
-var current_word_length = 0, guesses_left = 0;
-var game_over = false, animation_running = false;
+var current_word_length = 0, guesses_left = 0, wins = 0, losses = 0;
+var game_over = false;
 
 /* new_game() method */
 function new_game() {
@@ -17,10 +17,9 @@ function new_game() {
     correct_guesses = [], incorrect_guesses = [], letters_guessed = [];
     guesses_left = 12;
     game_over = false;
-    animation_running = false;
 
     /* reset text in paragraph tags */
-    $(".status").text("start guessing by hitting any key");
+    $(".status").text("hit a key to guess a letter");
     $(".word_mask").text("");
     $(".guesses_left").text("guesses left: 0");
     $(".correct_letters_guessed").text("correct guesses: ");
@@ -39,7 +38,12 @@ function new_word() {
     current_word = word_bank[Math.floor(Math.random() * word_bank.length)];
     current_word_length = current_word.length;
     
-    guesses_left = current_word_length + (Math.floor(current_word_length / 2));
+    if (current_word_length > 8)
+        guesses_left = 12
+    else if (current_word_length < 5)
+        guesses_left = 7;
+    else
+        guesses_left = current_word_length + (Math.floor(current_word_length / 2));
 
     $(".guesses_left").text("guesses left: " + guesses_left);
 
@@ -96,108 +100,119 @@ function random_warm_hex() {
 
 /* runs every time a keyup event happens on the document */
 document.onkeyup = function(event) {
-    if (!animation_running) {
-        $(".win_text_one").css('display', 'none');
-        $(".win_text_two").css('display', 'none');
-        $(".loss_text_one").css('display', 'none');
-        $(".loss_text_two").css('display', 'none');
-        $(".game_container").removeClass("shake-slow");
-        $(".game_container").removeClass("shake-constant");
-        $(".game_container").removeClass("shake-opacity");
+    $(".win_text_one").css('display', 'none');
+    $(".win_text_two").css('display', 'none');
+    $(".loss_text_one").css('display', 'none');
+    $(".loss_text_two").css('display', 'none');
+    $(".game_container").removeClass("shake-slow");
+    $(".game_container").removeClass("shake-constant");
+    $(".game_container").removeClass("shake-opacity");
 
-        animation_running = false;
-        
-        /* grab whichever key was pressed */
-        var letter = event.key.toLowerCase();
+    /* grab whichever key was pressed */
+    var letter = event.key.toLowerCase();
 
-        /* check to see if a new game needs to start */
-        if (guesses_left == 0 || game_over)
-            new_game();
-        /* if the game is in progress */
-        else {
-            /* regex for alphabet comparison */
-            var letters = /^[A-Za-z]+$/;
+    /* check to see if a new game needs to start */
+    if (guesses_left == 0 || game_over)
+        new_game();
+    /* if the game is in progress */
+    else {
+        /* regex for alphabet comparison */
+        var letters = /^[A-Za-z]+$/;
 
-            /* if key pressed is a letter of the alphabet */
-            if(letters.test(letter) && letter.length == 1) {
-                console.log(letters.test(letter));
+        /* if key pressed is a letter of the alphabet */
+        if(letters.test(letter) && letter.length == 1) {
+            console.log(letters.test(letter));
 
-                /* update status message */
-                $(".status").text("choose another letter");
+            /* update status message */
+            $(".status").text("choose another letter");
 
-                /* if the current_word contains the letter that was pressed */
-                if (current_word.indexOf(letter) !== -1) {
-                    /* and if the letter has not already been guessed by the player */
-                    if (!correct_guesses.includes(letter)) {
-                        /* scan through the word */
-                        for (var i = 0; i < current_word.length; i++) {
-                            /* place guessed letter in its corresponding position
-                                in letters_guessed array, and push the guessed letter
-                                onto the correct_guesses array */
-                            if (current_word_characters[i] == letter) {
-                                letters_guessed[i] = letter;
+            /* if the current_word contains the letter that was pressed */
+            if (current_word.indexOf(letter) !== -1) {
+                /* and if the letter has not already been guessed by the player */
+                if (!correct_guesses.includes(letter)) {
+                    /* scan through the word */
+                    for (var i = 0; i < current_word.length; i++) {
+                        /* place guessed letter in its corresponding position
+                            in letters_guessed array, and push the guessed letter
+                            onto the correct_guesses array */
+                        if (current_word_characters[i] == letter) {
+                            letters_guessed[i] = letter;
 
-                                /* check for duplicate letters & update display */
-                                if (!correct_guesses.includes(letter)) {
-                                    correct_guesses.push(letter);
+                            /* check for duplicate letters & update display */
+                            if (!correct_guesses.includes(letter)) {
+                                correct_guesses.push(letter);
 
-                                    $(".correct_letters_guessed").append(letter + " ");
-                                }
+                                $(".correct_letters_guessed").append(letter + " ");
                             }
                         }
+                    }
 
-                        /* update the word_mask element's value by joining the elements
+                    /* update the word_mask element's value by joining the elements
                             in the letters_guessed array into a single string */
-                        $(".word_mask").text("");
-                        $(".word_mask").text(letters_guessed.join(" "));
-                        /* if the user already guessed that letter */
-                    } else
-                        $(".status").text("you've already guessed that letter");
-                    /* if the current_word does not contain the letter that was pressed */
+                    $(".word_mask").text("");
+                    $(".word_mask").text(letters_guessed.join(" "));
+                    /* if the user already guessed that letter */
                 } else {
-                    /* if the user has not already guessed the letter */
-                    if (!incorrect_guesses.includes(letter)) {
-                        /* push the letter to the incorrect_guesses array,
-                            decrement guesses_left and update the display */
-                        incorrect_guesses.push(letter);
-                        
-                        $(".incorrect_letters_guessed").append(letter + " ");
-                        
-                        /* decrement guesses_left */
-                        decrement();
+                    $(".status").text("you've already guessed that letter");
+                    
+                    setTimeout(function() {
+                        if (!game_over)
+                            $(".status").text("choose another letter");
+                    }, 1000);
+                }
+                /* if the current_word does not contain the letter that was pressed */
+            } else {
+                /* if the user has not already guessed the letter */
+                if (!incorrect_guesses.includes(letter)) {
+                    /* push the letter to the incorrect_guesses array,
+                        decrement guesses_left and update the display */
+                    incorrect_guesses.push(letter);
+
+                    $(".incorrect_letters_guessed").append(letter + " ");
+
+                    /* decrement guesses_left */
+                    decrement();
 
                     /* if the user already guessed that letter */
-                    } else
-                        $(".status").text("you've already guessed that letter");
+                } else {
+                    $(".status").text("you've already guessed that letter");
+                    
+                    setTimeout(function() {
+                        $(".status").text("choose another letter");
+                    }, 1000);
                 }
             }
         }
+    }
 
-        /* check on every key up event if the joined letters in letters_guessed
-            match the current_word, and sets the game_over determiner if so */
-        if (letters_guessed.join("") == current_word) {
-            game_over = true;
+    /* check on every key up event if the joined letters in letters_guessed
+        match the current_word, and sets the game_over determiner if so */
+    if (letters_guessed.join("") == current_word) {
+        game_over = true;
+        wins++;
 
-            /* update display and do a little animation */
-            $(".status").text("press any key to try again");
-            $(".win_text_one").css('display', 'initial');
-            $(".win_text_two").css('display', 'initial');
-            $(".game_container").addClass("shake-slow");
-            $(".game_container").addClass("shake-constant");
-            $(".word_mask").text("the word was: " + current_word);
-        }
+        /* update display and do a little animation */
+        $(".status").text("press any key to try again");
+        $(".score").text("~" + " " + "wins:" + " " + wins + " " + "~" + " " + "losses:" + " " + losses + " " + "~");
+        $(".win_text_one").css('display', 'initial');
+        $(".win_text_two").css('display', 'initial');
+        $(".game_container").addClass("shake-slow");
+        $(".game_container").addClass("shake-constant");
+        $(".word_mask").text("the word was: " + current_word);
+    }
 
-        /* if the player loses */
-        if (guesses_left == 0 && !(letters_guessed.join("") == current_word)) {
-            game_over = true;
+    /* if the player loses */
+    if (guesses_left == 0 && !(letters_guessed.join("") == current_word)) {
+        game_over = true;
+        losses++;
 
-            /* update display and do a little animation */
-            $(".status").text("press any key to try again");
-            $(".loss_text_one").css('display', 'initial');
-            $(".loss_text_two").css('display', 'initial');
-            $(".game_container").addClass("shake-opacity");
-            $(".game_container").addClass("shake-constant");
-            $(".word_mask").text("the word was: " + current_word);
-        }
+        /* update display and do a little animation */
+        $(".status").text("press any key to try again");
+        $(".score").text("~" + " " + "wins:" + " " + wins + " " + "~" + " " + "losses:" + " " + losses + " " + "~");
+        $(".loss_text_one").css('display', 'initial');
+        $(".loss_text_two").css('display', 'initial');
+        $(".game_container").addClass("shake-opacity");
+        $(".game_container").addClass("shake-constant");
+        $(".word_mask").text("the word was: " + current_word);
     }
 }

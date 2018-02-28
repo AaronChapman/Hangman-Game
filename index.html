@@ -14,18 +14,22 @@
     </head>
     
     <body class="page_body" onload="new_game()">
+        
         <p class="win_text_one spin">you won!</p>
         <p class="loss_text_one shake-opacity shake-constant">you lost!</p>
         <p class="win_text_two other_spin">you won!</p>
         <p class="loss_text_two shake-opacity shake-constant">you lost!</p>
+        
         <div class="game_container">
-            <p class="status">start guessing by hitting any key</p>
+            <p class="status"></p>
             <br>
             <p class="word_mask"></p>
             <br>
             <p class="guesses_left">guesses left: </p>
-            <p class="correct_letters_guessed left_aligned">correct guesses: </p>
-            <p class="incorrect_letters_guessed left_aligned">incorrect guesses: </p>
+            <p class="correct_letters_guessed letters_chosen"> </p>
+            <p class="incorrect_letters_guessed letters_chosen"> </p>
+            <br>
+            <p class="score">~ wins: 0 ~ losses: 0 ~</p>
         </div>
         
     </body>
