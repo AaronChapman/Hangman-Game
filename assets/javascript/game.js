@@ -38,7 +38,7 @@ function new_word() {
         and determine number of guesses available to the player */
     current_word = word_bank[Math.floor(Math.random() * word_bank.length)];
     current_word_length = current_word.length;
-    guesses_left = current_word_length + 4;
+    guesses_left = current_word_length + 2;
 
     $(".guesses_left").text("guesses left: " + guesses_left);
 
@@ -140,8 +140,11 @@ document.onkeyup = function(event) {
                         /* if the user already guessed that letter */
                     } else
                         $(".status").text("you've already guessed that letter");
-                    /* if the current_word does not contain the letter that was pressed */
+                /* if the current_word does not contain the letter that was pressed */
                 } else {
+                    /* decrement guesses_left */
+                    decrement();
+                    
                     /* if the user has not already guessed the letter */
                     if (!incorrect_guesses.includes(letter)) {
                         /* push the letter to the incorrect_guesses array,
@@ -155,9 +158,6 @@ document.onkeyup = function(event) {
                         $(".status").text("you've already guessed that letter");
                 }
             }
-
-            /* decrement guesses_left */
-            decrement();
         }
 
         /* check on every key up event if the joined letters in letters_guessed
