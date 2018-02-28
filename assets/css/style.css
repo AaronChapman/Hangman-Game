@@ -32,9 +32,44 @@ p {
 }
 
 .status {
-    font-size: 36px;
+    transition: all 0.5s;
+    font-size: 40px;
+}
+
+.spin {
+    -webkit-animation: spin 2s infinite linear;
+}
+
+.other_spin {
+    -webkit-animation: otherspin 2s infinite linear;
 }
 
 .word_mask {
     font-size: 36px;
+}
+
+.win_text_one, .loss_text_one {
+    left: 25px;
+}
+
+.win_text_two, .loss_text_two {
+    right: 25px;
+}
+
+.win_text_one, .win_text_two, .loss_text_one, .loss_text_two {
+    position: fixed;
+    transition: all 0.5s;
+    font-size: 50px;
+    top: 25px;
+    display: none;
+}
+
+@-webkit-keyframes spin {
+    0%  {-webkit-transform: rotate(0deg);}
+    100% {-webkit-transform: rotate(-360deg);}   
+}
+
+@-webkit-keyframes otherspin {
+    0%  {-webkit-transform: rotate(0deg);}
+    100% {-webkit-transform: rotate(360deg);}   
 }

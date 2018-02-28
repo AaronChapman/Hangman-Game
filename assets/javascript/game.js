@@ -90,11 +90,23 @@ function random_warm_hex() {
     setTimeout(function() {
         random_warm_hex();
     }, 1000);
+    
+    return temp_hex;
 }
 
 /* runs every time a keyup event happens on the document */
 document.onkeyup = function(event) {
     if (!animation_running) {
+        $(".win_text_one").css('display', 'none');
+        $(".win_text_two").css('display', 'none');
+        $(".loss_text_one").css('display', 'none');
+        $(".loss_text_two").css('display', 'none');
+        $(".game_container").removeClass("shake-slow");
+        $(".game_container").removeClass("shake-constant");
+        $(".game_container").removeClass("shake-opacity");
+
+        animation_running = false;
+        
         /* grab whichever key was pressed */
         var letter = event.key.toLowerCase();
 
@@ -165,43 +177,27 @@ document.onkeyup = function(event) {
             match the current_word, and sets the game_over determiner if so */
         if (letters_guessed.join("") == current_word) {
             game_over = true;
-            animation_running = true;
 
             /* update display and do a little animation */
-            $(".status").text("you won!");
+            $(".status").text("press any key to try again");
+            $(".win_text_one").css('display', 'initial');
+            $(".win_text_two").css('display', 'initial');
             $(".game_container").addClass("shake-slow");
             $(".game_container").addClass("shake-constant");
             $(".word_mask").text("the word was: " + current_word);
-
-            /* timed call to reverse animation and set display text again */
-            setTimeout(function() {
-                $(".game_container").removeClass("shake-slow");
-                $(".game_container").removeClass("shake-constant");
-                $(".status").text("press any key to try again");
-                
-                animation_running = false;
-            }, 2000);
         }
 
         /* if the player loses */
         if (guesses_left == 0 && !(letters_guessed.join("") == current_word)) {
             game_over = true;
-            animation_running = true;
 
             /* update display and do a little animation */
-            $(".status").text("You Lost!");
+            $(".status").text("press any key to try again");
+            $(".loss_text_one").css('display', 'initial');
+            $(".loss_text_two").css('display', 'initial');
             $(".game_container").addClass("shake-opacity");
             $(".game_container").addClass("shake-constant");
             $(".word_mask").text("the word was: " + current_word);
-
-            /* timed call to reverse animation and set display text again */
-            setTimeout(function() {
-                $(".game_container").removeClass("shake-opacity");
-                $(".game_container").removeClass("shake-constant");
-                $(".status").text("press any key to try again");
-
-                animation_running = false;
-            }, 2000);
         }
     }
 }
