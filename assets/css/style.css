@@ -1,0 +1,17 @@
+body {
+    transition: all 1s ease-in-out;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    text-align: center;
+}
+
+.game_container {
+    margin: auto;
+    width: 30%;
+}
+
+.left_aligned {
+    text-align: left;
+}
